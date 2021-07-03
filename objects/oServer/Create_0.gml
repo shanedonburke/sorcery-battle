@@ -66,6 +66,7 @@ update = function() {
 			buffer_write(send_buffer, buffer_u8, num_players);
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);
+				//show_debug_message(string(steam_id));
 				var char = ds_map_find_value(global.characters, steam_id);
 				buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
 				buffer_write(send_buffer, buffer_u8, ds_map_find_value(global.player_inputs, steam_id) || 0);

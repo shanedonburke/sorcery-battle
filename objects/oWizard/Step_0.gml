@@ -66,19 +66,26 @@ if (lmb_pressed) {
 	bubble.speed = 2;
 }
 
-if (is_me && global.network_type == "CLIENT") {
-	var input = key_left;
-	input |= key_right << 1;
-	input |= key_jump << 2;
-	input |= lmb_pressed << 3;
-		
-	buffer_seek(send_buffer, buffer_seek_start, 0);
-	buffer_write(send_buffer, buffer_u8, 3);
-	buffer_write(send_buffer, buffer_u8, input);
-	buffer_write(send_buffer, buffer_u16, arm_direction);
-	buffer_write(send_buffer, buffer_f32, old_x);
-	buffer_write(send_buffer, buffer_f32, old_y);
-	steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_unreliable);	
-	// steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_reliable);	
+var input = key_left;
+input |= key_right << 1;
+input |= key_jump << 2;
+input |= lmb_pressed << 3;
+
+if (is_me) {
+	switch (global.network_type) {
+		case "CLIENT":
+			buffer_seek(send_buffer, buffer_seek_start, 0);
+			buffer_write(send_buffer, buffer_u8, 3);
+			buffer_write(send_buffer, buffer_u8, input);
+			buffer_write(send_buffer, buffer_u16, arm_direction);
+			buffer_write(send_buffer, buffer_f32, old_x);
+			buffer_write(send_buffer, buffer_f32, old_y);
+			steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_unreliable);	
+			// steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_reliable);
+			break;
+		case "SERVER":
+			ds_map_set(global.player_inputs, global.my_steam_id, input);
+			break;
+	}	
 }
 
