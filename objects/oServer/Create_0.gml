@@ -59,14 +59,16 @@ handle_packet = function(buffer) {
 
 update = function() {
 	if (global.characters_initialized) {
-		var num_chars = ds_map_size(global.characters);
-		if (num_chars > 0) {
+		var num_players = steam_lobby_get_member_count();
+		if (num_players > 0) {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
 			buffer_write(send_buffer, buffer_u8, 3);
-			buffer_write(send_buffer, buffer_u8, num_chars);
+			buffer_write(send_buffer, buffer_u8, num_players);
 			var steam_id = ds_map_find_first(global.characters);
-			for (var i = 0; i < num_chars; i++) {
+			for (var i = 0; i < num_players; i++) {
+				steam_id = steam_lobby_get_member_id(i);
 				var char = ds_map_find_value(global.characters, steam_id);
+				show_debug_message(steam_id & 0xffff);
 				buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
 				buffer_write(send_buffer, buffer_u8, ds_map_find_value(global.player_inputs, steam_id) || 0);
 				buffer_write(send_buffer, buffer_f32, char.x);
@@ -74,11 +76,11 @@ update = function() {
 				buffer_write(send_buffer, buffer_u16, char.arm_direction);
 				steam_id = ds_map_find_next(global.characters, steam_id);
 			}
-			for (var i = 0; i < num_chars; i++) {
+			for (var i = 0; i < num_players; i++) {
 				var steam_id = steam_lobby_get_member_id(i);
 				if (steam_id != global.my_steam_id) {
-					steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_chars), steam_net_packet_type_unreliable);
-					//steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_chars), steam_net_packet_type_reliable);
+					steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_players), steam_net_packet_type_unreliable);
+					//steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_players), steam_net_packet_type_reliable);
 				}
 			}
 		}	
