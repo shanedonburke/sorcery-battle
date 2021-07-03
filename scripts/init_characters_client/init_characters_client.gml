@@ -15,4 +15,5 @@ function init_characters_client() {
 		show_debug_message("Spawned character: x=" + string(c_x));
 	}
 	global.characters_initialized = true;
+	global.character_arr = ds_map_values_to_array(global.characters);
 }

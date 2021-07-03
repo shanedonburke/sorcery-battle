@@ -61,6 +61,9 @@ handle_packet = function(buffer) {
 
 update = function() {
 	if (global.characters_initialized) {
+		for (var i = 0; i < array_length(global.character_arr); i++) {
+			global.character_arr[i].update();	
+		}
 		var num_players = steam_lobby_get_member_count();
 		if (num_players > 0) {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
@@ -69,13 +72,7 @@ update = function() {
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);
 				if (ds_map_exists(global.character_updates, steam_id)) {
-					//show_debug_message(string(steam_id));
-					var char = ds_map_find_value(global.characters, steam_id);
 					buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
-					//buffer_write(send_buffer, buffer_u8, ds_map_exists(global.player_inputs, steam_id) ? ds_map_find_value(global.player_inputs, steam_id) : 0);
-					//buffer_write(send_buffer, buffer_f32, char.x);
-					//buffer_write(send_buffer, buffer_f32, char.y);
-					//buffer_write(send_buffer, buffer_u16, char.arm_direction);
 					ds_map_find_value(global.character_updates, steam_id).write_to_buffer(send_buffer);
 				}
 			}

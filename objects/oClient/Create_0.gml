@@ -33,16 +33,14 @@ handle_packet = function(buffer) {
 			}
 			var num_players = buffer_read(buffer, buffer_u8);
 			for (var i = 0; i < num_players; i++) {
-				var steam_id_low = buffer_read(buffer, buffer_u16);
 				var steam_id = ds_map_find_value(
 						global.steam_id_u16_to_u64,
-						steam_id_low
+						buffer_read(buffer, buffer_u16)
 				);
 				if (steam_id != global.my_steam_id) {
 					var char = ds_map_find_value(global.characters, steam_id);
 					if (char != undefined) {
 						var input = buffer_read(buffer, buffer_u8);
-						show_debug_message(string(input));
 						ds_map_set(global.player_inputs, steam_id, input);
 						char.arm_direction = buffer_read(buffer, buffer_u16);
 						char.x = buffer_read(buffer, buffer_f32);
