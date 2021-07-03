@@ -18,10 +18,10 @@ if (is_me) {
 } else if (ds_map_exists(global.player_inputs, steam_id)) {
 	//show_debug_message("Have input");
 	var input = ds_map_find_value(global.player_inputs, steam_id);
-	key_left = input & 1;
-	key_right = (input >> 1) & 1;
-	key_jump = (input >> 2) & 1;
-	lmb_pressed = (input >> 3) & 1;
+	key_left = input & 0x1;
+	key_right = (input >> 0x1) & 0x1;
+	key_jump = (input >> 0x2) & 1;
+	lmb_pressed = (input >> 0x3) & 0x1;
 }
 	
 if (is_me && global.network_type == "CLIENT") {
@@ -67,9 +67,9 @@ if (lmb_pressed) {
 }
 
 var input = key_left;
-input |= key_right << 1;
-input |= key_jump << 2;
-input |= lmb_pressed << 3;
+input |= key_right << 0x1;
+input |= key_jump << 0x2;
+input |= lmb_pressed << 0x3;
 
 if (is_me) {
 	switch (global.network_type) {
