@@ -36,7 +36,7 @@ handle_packet = function(buffer) {
 				var steam_id_low = buffer_read(buffer, buffer_u16);
 				var steam_id = ds_map_find_value(
 						global.steam_id_u16_to_u64,
-						buffer_read(buffer, buffer_u16)
+						steam_id_low
 				);
 				show_debug_message(string(steam_id_low));
 				if (steam_id != global.my_steam_id) {
