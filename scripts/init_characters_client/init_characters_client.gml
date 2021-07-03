@@ -11,7 +11,7 @@ function init_characters_client() {
 		var c_y = buffer_read(global.character_init_buffer, buffer_f32);
 		var char_inst = instance_create_depth(c_x, c_y, 0, oWizard);
 		char_inst.steam_id = steam_id;
-		ds_map_add(global.characters, steam_id, char_inst);
+		ds_map_set(global.characters, steam_id, char_inst);
 		show_debug_message("Spawned character: x=" + string(c_x));
 	}
 	global.characters_initialized = true;
