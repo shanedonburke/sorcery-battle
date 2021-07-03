@@ -71,6 +71,8 @@ input |= key_jump << 0x2;
 input |= lmb_pressed << 0x3;
 
 if (is_me && global.network_type == "CLIENT") {
+	buffer_seek(send_buffer, buffer_seek_start, 0);
+	buffer_write(send_buffer, buffer_u8, 3);
 	new character_update(input, arm_direction, old_x, old_y).write_to_buffer(send_buffer);
 	steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_unreliable);	
 	// steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_reliable);

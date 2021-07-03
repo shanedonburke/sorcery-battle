@@ -6,8 +6,6 @@ function character_update(_input, _arm_direction, _x, _y) constructor {
 	x = _x;
 	y = _y;
 	write_to_buffer = function(buffer) {
-		buffer_seek(buffer, buffer_seek_start, 0);
-		buffer_write(buffer, buffer_u8, 3);
 		buffer_write(buffer, buffer_u8, input);
 		buffer_write(buffer, buffer_u16, arm_direction);
 		buffer_write(buffer, buffer_f32, x);
