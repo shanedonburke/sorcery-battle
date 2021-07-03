@@ -24,10 +24,8 @@ if (is_me) {
 	lmb_pressed = (input >> 0x3) & 0x1;
 }
 	
-if (is_me && global.network_type == "CLIENT") {
-	var old_x = x;
-	var old_y = y;
-}
+var old_x = x;
+var old_y = y;
 	
 var _move = key_right - key_left;
 
@@ -72,21 +70,12 @@ input |= key_right << 0x1;
 input |= key_jump << 0x2;
 input |= lmb_pressed << 0x3;
 
-if (is_me) {
-	switch (global.network_type) {
-		case "CLIENT":
-			buffer_seek(send_buffer, buffer_seek_start, 0);
-			buffer_write(send_buffer, buffer_u8, 3);
-			buffer_write(send_buffer, buffer_u8, input);
-			buffer_write(send_buffer, buffer_u16, arm_direction);
-			buffer_write(send_buffer, buffer_f32, old_x);
-			buffer_write(send_buffer, buffer_f32, old_y);
-			steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_unreliable);	
-			// steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_reliable);
-			break;
-		case "SERVER":
-			ds_map_set(global.player_inputs, global.my_steam_id, input);
-			break;
-	}	
+if (is_me && global.network_type == "CLIENT") {
+	new character_update(input, arm_direction, old_x, old_y).write_to_buffer(send_buffer);
+	steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_unreliable);	
+	// steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 12, steam_net_packet_type_reliable);
+} else if (global.network_type == "SERVER") {
+	ds_map_set(global.player_inputs, global.my_steam_id, input);
+	ds_map_set(global.character_updates, steam_id, new character_update(input, arm_direction, old_x, old_y));
 }
 

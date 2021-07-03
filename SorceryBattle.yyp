@@ -17,6 +17,7 @@
     {"id":{"name":"rLobby","path":"rooms/rLobby/rLobby.yy",},"order":2,},
     {"id":{"name":"sWizard_Arm","path":"sprites/sWizard_Arm/sWizard_Arm.yy",},"order":2,},
     {"id":{"name":"oServerButton","path":"objects/oServerButton/oServerButton.yy",},"order":7,},
+    {"id":{"name":"character_update","path":"scripts/character_update/character_update.yy",},"order":7,},
     {"id":{"name":"oWizard","path":"objects/oWizard/oWizard.yy",},"order":1,},
     {"id":{"name":"get_lobby_avatars","path":"scripts/get_lobby_avatars/get_lobby_avatars.yy",},"order":2,},
     {"id":{"name":"message_types","path":"scripts/message_types/message_types.yy",},"order":6,},

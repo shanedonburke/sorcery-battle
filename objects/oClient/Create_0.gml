@@ -44,10 +44,10 @@ handle_packet = function(buffer) {
 						var input = buffer_read(buffer, buffer_u8);
 						show_debug_message(string(input));
 						ds_map_set(global.player_inputs, steam_id, input);
+						char.arm_direction = buffer_read(buffer, buffer_u16);
 						char.x = buffer_read(buffer, buffer_f32);
 						char.y = buffer_read(buffer, buffer_f32);
 						// show_debug_message(string(char.x) + ", " + string(char.y));
-						char.arm_direction = buffer_read(buffer, buffer_u16);
 					} else {
 						buffer_seek(buffer, buffer_seek_relative, 12);
 					}

@@ -5,9 +5,11 @@
 
 // instance_create_depth(0, 0, 0, oClient);
 
+global.character_updates = ds_map_create();
+send_buffer = buffer_create(16, buffer_grow, 1);
+
 steam_lobby_create(steam_lobby_type_public, 4);
 
-send_buffer = buffer_create(16, buffer_grow, 1);
 //global.player_positions = ds_map_create();
 
 //process_packet_server = function(_async_load) {
@@ -66,13 +68,16 @@ update = function() {
 			buffer_write(send_buffer, buffer_u8, num_players);
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);
-				//show_debug_message(string(steam_id));
-				var char = ds_map_find_value(global.characters, steam_id);
-				buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
-				buffer_write(send_buffer, buffer_u8, ds_map_find_value(global.player_inputs, steam_id) || 0);
-				buffer_write(send_buffer, buffer_f32, char.x);
-				buffer_write(send_buffer, buffer_f32, char.y);
-				buffer_write(send_buffer, buffer_u16, char.arm_direction);
+				if (ds_map_exists(global.character_updates, steam_id)) {
+					//show_debug_message(string(steam_id));
+					var char = ds_map_find_value(global.characters, steam_id);
+					buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
+					//buffer_write(send_buffer, buffer_u8, ds_map_exists(global.player_inputs, steam_id) ? ds_map_find_value(global.player_inputs, steam_id) : 0);
+					//buffer_write(send_buffer, buffer_f32, char.x);
+					//buffer_write(send_buffer, buffer_f32, char.y);
+					//buffer_write(send_buffer, buffer_u16, char.arm_direction);
+					ds_map_find_value(global.character_updates, steam_id).write_to_buffer(send_buffer);
+				}
 			}
 			for (var i = 0; i < num_players; i++) {
 				var steam_id = steam_lobby_get_member_id(i);
