@@ -42,7 +42,6 @@ handle_packet = function(buffer) {
 				if (steam_id != global.my_steam_id) {
 					var char = ds_map_find_value(global.characters, steam_id);
 					if (char != undefined) {
-						show_debug_message("Char defined");
 						ds_map_set(global.player_inputs, steam_id, buffer_read(buffer, buffer_u8));
 						char.x = buffer_read(buffer, buffer_f32);
 						char.y = buffer_read(buffer, buffer_f32);
