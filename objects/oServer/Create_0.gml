@@ -40,11 +40,11 @@ send_buffer = buffer_create(16, buffer_grow, 1);
 
 handle_packet = function(buffer) {
 	switch (buffer_read(buffer, buffer_u8)) {
-		case 0:
+		case message_types.PLAYER_JOINED:
 			// var steam_id = buffer_read(recv_buffer, buffer_u64);
 			get_lobby_avatars();
 			return true;
-		case 3:
+		case message_types.CHAR_UPDATE:
 			var steam_id = steam_net_packet_get_sender_id();
 			var char = ds_map_find_value(global.characters, steam_id);
 			ds_map_set(global.player_inputs, steam_id, buffer_read(buffer, buffer_u8));
@@ -64,16 +64,15 @@ update = function() {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
 			buffer_write(send_buffer, buffer_u8, 3);
 			buffer_write(send_buffer, buffer_u8, num_players);
-			var steam_id = ds_map_find_first(global.characters);
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);
 				var char = ds_map_find_value(global.characters, steam_id);
+				show_debug_message(steam_id & 0xffff);
 				buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
 				buffer_write(send_buffer, buffer_u8, ds_map_find_value(global.player_inputs, steam_id) || 0);
 				buffer_write(send_buffer, buffer_f32, char.x);
 				buffer_write(send_buffer, buffer_f32, char.y);
 				buffer_write(send_buffer, buffer_u16, char.arm_direction);
-				steam_id = ds_map_find_next(global.characters, steam_id);
 			}
 			for (var i = 0; i < num_players; i++) {
 				var steam_id = steam_lobby_get_member_id(i);
