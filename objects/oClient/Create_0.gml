@@ -49,7 +49,8 @@ handle_packet = function(buffer) {
 						// show_debug_message(string(char.x) + ", " + string(char.y));
 						char.arm_direction = buffer_read(buffer, buffer_u16);
 					} else {
-						buffer_seek(buffer, buffer_seek_relative, 12);
+						// buffer_seek(buffer, buffer_seek_relative, 12);
+						show_debug_message("Undefined character with steam ID: " + string(steam_id));
 					}
 				}
 			}
