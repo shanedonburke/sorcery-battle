@@ -4,7 +4,7 @@
 key_left = 0;
 key_right = 0;
 key_jump = 0;
-var lmb_pressed = 0;
+lmb_pressed = 0;
 
 var is_me = id == ds_map_find_value(global.characters, global.my_steam_id);
 
@@ -18,10 +18,10 @@ if (is_me) {
 } else if (ds_map_exists(global.player_inputs, steam_id)) {
 	//show_debug_message("Have input");
 	var input = ds_map_find_value(global.player_inputs, steam_id);
-	key_left = input & 0x1;
-	key_right = (input & 0x2) >> 1;
-	key_jump = (input & 0x3) >> 2;
-	lmb_pressed = (input & 0x4) >> 3;
+	key_left = input & 1;
+	key_right = (input >> 1) & 1;
+	key_jump = (input >> 2) & 1;
+	lmb_pressed = (input >> 3) & 1;
 }
 	
 if (is_me && global.network_type == "CLIENT") {
