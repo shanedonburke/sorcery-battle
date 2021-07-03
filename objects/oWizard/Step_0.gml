@@ -16,7 +16,7 @@ if (is_me) {
 	lmb_pressed = mouse_check_button_pressed(mb_left);
 	arm_direction =  point_direction(arm_x, arm_y, mouse_x, mouse_y);
 } else if (ds_map_exists(global.player_inputs, steam_id)) {
-	show_debug_message("Have input");
+	//show_debug_message("Have input");
 	var input = ds_map_find_value(global.player_inputs, steam_id);
 	key_left = input & 0x1;
 	key_right = (input & 0x2) >> 1;
