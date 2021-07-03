@@ -79,7 +79,7 @@ update = function() {
 			for (var i = 0; i < num_players; i++) {
 				var steam_id = steam_lobby_get_member_id(i);
 				if (steam_id != global.my_steam_id) {
-					steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_players), steam_net_packet_type_unreliable);
+					steam_net_packet_send(steam_id, send_buffer, buffer_get_size(send_buffer), steam_net_packet_type_unreliable);
 					//steam_net_packet_send(steam_id, send_buffer, 2 + (13 * num_players), steam_net_packet_type_reliable);
 				}
 			}
