@@ -66,7 +66,8 @@ if (lmb_pressed) {
 	bubble.speed = 2;
 }
 
-var input = key_left;
+var input = 0;
+input |= key_left;
 input |= key_right << 0x1;
 input |= key_jump << 0x2;
 input |= lmb_pressed << 0x3;
