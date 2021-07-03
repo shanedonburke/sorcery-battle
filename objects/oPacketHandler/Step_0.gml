@@ -19,6 +19,10 @@ while (steam_net_packet_receive()) {
 	}
 }
 
+for (var i = 0; i < array_length(global.character_arr); i++) {
+	global.character_arr[i].update();	
+}	
+
 if (room == rGame && (!variable_global_exists("characters_initialized") || !global.characters_initialized)) {
 	global.characters_initialized = false;
 	init_characters_client();

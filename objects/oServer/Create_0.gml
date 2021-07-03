@@ -61,9 +61,9 @@ handle_packet = function(buffer) {
 
 update = function() {
 	if (global.characters_initialized) {
-		for (var i = 0; i < array_length(global.character_arr); i++) {
-			global.character_arr[i].update();	
-		}
+		//for (var i = 0; i < array_length(global.character_arr); i++) {
+		//	global.character_arr[i].update();	
+		//}
 		var num_players = steam_lobby_get_member_count();
 		if (num_players > 0) {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
