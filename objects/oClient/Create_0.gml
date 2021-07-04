@@ -40,12 +40,14 @@ handle_packet = function(buffer) {
 				if (steam_id != global.my_steam_id) {
 					var char = ds_map_find_value(global.characters, steam_id);
 					if (char != undefined) {
-						var input = buffer_read(buffer, buffer_u8);
-						ds_map_set(global.player_inputs, steam_id, input);
-						char.arm_direction = buffer_read(buffer, buffer_u16);
-						char.x = buffer_read(buffer, buffer_f32);
-						char.y = buffer_read(buffer, buffer_f32);
 						// show_debug_message(string(char.x) + ", " + string(char.y));
+						var update = character_update.from_buffer(buffer);
+						ds_map_set(global.player_inputs, steam_id, update.input);
+			
+						var char = ds_map_find_value(global.characters, steam_id);
+						char.arm_direction = update.arm_direction;
+						char.x = update.x;
+						char.y = update.y;
 					} else {
 						// buffer_seek(buffer, buffer_seek_relative, 12);
 						show_debug_message("Undefined character with steam ID: " + string(steam_id));

@@ -48,11 +48,13 @@ handle_packet = function(buffer) {
 			return true;
 		case message_types.CHAR_UPDATE:
 			var steam_id = steam_net_packet_get_sender_id();
+			var update = character_update.from_buffer(buffer);
+			ds_map_set(global.player_inputs, steam_id, update.input);
+			
 			var char = ds_map_find_value(global.characters, steam_id);
-			ds_map_set(global.player_inputs, steam_id, buffer_read(buffer, buffer_u8));
-			char.arm_direction = buffer_read(buffer, buffer_u16);
-			char.x = buffer_read(buffer, buffer_f32);
-			char.y = buffer_read(buffer, buffer_f32);
+			char.arm_direction = update.arm_direction;
+			char.x = update.x;
+			char.y = update.y;
 			break;
 		default:
 			return false;
