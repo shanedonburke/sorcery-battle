@@ -29,7 +29,7 @@ handle_packet = function(buffer) {
 			return true;
 		case message_types.CHAR_UPDATE:
 			if (!global.characters_initialized) {
-				return true;	
+				return true;
 			}
 			var num_players = buffer_read(buffer, buffer_u8);
 			for (var i = 0; i < num_players; i++) {
