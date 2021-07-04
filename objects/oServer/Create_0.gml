@@ -48,7 +48,7 @@ handle_packet = function(buffer) {
 			return true;
 		case message_types.CHAR_UPDATE:
 			var steam_id = steam_net_packet_get_sender_id();
-			var update = character_update.from_buffer(buffer);
+			var update = char_update_from_buffer(buffer);
 			ds_map_set(global.player_inputs, steam_id, update.input);
 			
 			var char = ds_map_find_value(global.characters, steam_id);
