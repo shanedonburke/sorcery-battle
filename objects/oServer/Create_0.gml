@@ -70,6 +70,7 @@ update = function() {
 		if (num_players > 0) {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
 			buffer_write(send_buffer, buffer_u8, 3);
+			buffer_write(send_buffer, buffer_u32, current_time);
 			buffer_write(send_buffer, buffer_u8, num_players);
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);

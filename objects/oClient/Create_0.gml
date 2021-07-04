@@ -7,6 +7,7 @@ global.characters_initialized = false;
 global.characters = ds_map_create();
 global.steam_id_u16_to_u64 = ds_map_create();
 global.player_inputs = ds_map_create();
+last_update_ms = 0;
 
 //client_socket = network_create_socket(network_socket_udp);
 //recv_buffer = buffer_create(16, buffer_grow, 1);
@@ -31,6 +32,11 @@ handle_packet = function(buffer) {
 			if (!global.characters_initialized) {
 				return true;
 			}
+			var timestamp = buffer_read(buffer, buffer_u32);
+			if (timestamp < last_update_ms) {
+				return true;
+			}
+			last_update_ms = timestamp;
 			var num_players = buffer_read(buffer, buffer_u8);
 			for (var i = 0; i < num_players; i++) {
 				var steam_id = ds_map_find_value(
