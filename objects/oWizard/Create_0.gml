@@ -1,6 +1,8 @@
 /// @description Insert description here
 // You can write your code in this editor
 
+hp = 20;
+
 hsp = 0;
 vsp = 0;
 
@@ -10,6 +12,8 @@ arm_y = y;
 
 send_buffer = buffer_create(16, buffer_grow, 1);
 steam_id = -1;
+charge_frames = 0;
+orb = undefined;
 
 update = function() {
 	key_left = 0;
@@ -24,8 +28,7 @@ update = function() {
 		key_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
 		key_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
 		key_jump = keyboard_check(vk_space) || keyboard_check(ord("W"));
-		lmb_pressed = mouse_check_button_pressed(mb_left);
-		arm_direction =  point_direction(arm_x, arm_y, mouse_x, mouse_y);
+		lmb_pressed = mouse_check_button(mb_left);
 	} else if (ds_map_exists(global.player_inputs, steam_id)) {
 		//show_debug_message("Have input");
 		var input = ds_map_find_value(global.player_inputs, steam_id);
@@ -42,10 +45,17 @@ update = function() {
 
 	hsp = 2 * _move;
 	vsp = vsp + 0.5;
+	
+	var grounded = place_meeting(x, y + 1, oStatic);
 
-
-	if (place_meeting(x, y + 1, oStatic) && key_jump) {
+	if (grounded && key_jump) {
 		vsp = vsp - 7.5;	
+	}
+	
+	if (sprite_index == sWizard && grounded && _move != 0) {
+		sprite_index = sWizard_Walking;	
+	} else if (sprite_index == sWizard_Walking && !(grounded && _move != 0)) {
+		sprite_index = sWizard;	
 	}
 
 	if (place_meeting(x + hsp, y, oStatic)) {
@@ -65,14 +75,40 @@ update = function() {
 		vsp = 0;
 	}
 	y = y + vsp;
-
+	
 	arm_x = x + (3 * image_xscale);
 	arm_y = y - 14;
+	
+	if (sprite_index == sWizard_Walking) {
+		var idx_floor = floor(image_index);
+		if (idx_floor == 1 || idx_floor == 3) {
+			arm_y += 1;
+		} else if (idx_floor == 2) {
+			arm_y += 2;	
+		}
+	}
+	
+	if (is_me) {
+		arm_direction =  point_direction(arm_x, arm_y, mouse_x, mouse_y);	
+	}
 
 	if (lmb_pressed) {
-		var bubble = instance_create_depth(arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction), arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction), -1, oMagicBubble);
-		bubble.direction = arm_direction;
-		bubble.speed = 2;
+		if (charge_frames == 0) {
+			//var bubble = instance_create_depth(arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction), arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction), -1, oWizardOrb);
+			//bubble.direction = arm_direction;
+			//bubble.speed = 2;
+			orb = instance_create_depth(arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction), arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction), -1, oWizardOrb);
+		} else {
+			orb.x = arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction);
+			orb.y = arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction);
+		}
+		charge_frames = 1;
+	} else if (charge_frames > 0) {
+		orb.direction = arm_direction;
+		orb.speed = 2;
+		orb.stop_animation();
+		orb = undefined;
+		charge_frames = 0;
 	}
 
 	var input = 0;
