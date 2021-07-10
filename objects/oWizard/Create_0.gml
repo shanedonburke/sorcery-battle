@@ -145,7 +145,7 @@ update = function() {
 	if (is_undefined(mirror) && mmb_pressed) {
 		spawn_mirror();
 		mirror.image_angle = arm_direction;
-	} if (!is_undefined(mirror) && mmb_pressed) {
+	} if (!is_undefined(mirror) && mmb_pressed && is_me) {
 		var diff_x = mouse_x - mirror.x;
 		var diff_y = mouse_y - mirror.y;
 		var mag = sqrt(sqr(diff_x) + sqr(diff_y));

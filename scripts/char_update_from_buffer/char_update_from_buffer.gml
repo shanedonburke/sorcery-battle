@@ -36,9 +36,11 @@ function char_update_from_buffer(buffer, steam_id) {
 					if (is_undefined(global.transients[? steam_id][? transient_types.MIRROR])) {
 						char.spawn_mirror();
 					}
-					char.mirror.image_angle = m_angle;
-					char.mirror.x = m_x;
-					char.mirror.y = m_y;
+					if (steam_id != global.my_steam_id) {
+						char.mirror.image_angle = m_angle;
+						char.mirror.x = m_x;
+						char.mirror.y = m_y;	
+					}
 					counted += 1;
 					break;
 			}	
