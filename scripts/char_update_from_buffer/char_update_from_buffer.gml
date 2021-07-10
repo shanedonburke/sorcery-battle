@@ -7,6 +7,7 @@ function char_update_from_buffer(buffer, steam_id) {
 	var _y = buffer_read(buffer, buffer_f32);
 	var t_count = buffer_read(buffer, buffer_u8);
 	if (t_count > 0) {
+		show_debug_message("t_count = " + string(t_count));
 		var char = global.characters[? steam_id];
 		var counted = 0;
 		while (counted < t_count) {
@@ -14,6 +15,7 @@ function char_update_from_buffer(buffer, steam_id) {
 			switch (t_type) {
 				case transient_types.ORB:
 					var num_orbs = buffer_read(buffer, buffer_u8);
+					show_debug_message(num_orbs);
 					for (var i = 0; i < num_orbs; i++) {
 						var orb_id = buffer_read(buffer, buffer_u8);
 						var img_idx = buffer_read(buffer, buffer_u8);

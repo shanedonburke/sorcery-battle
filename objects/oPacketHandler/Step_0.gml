@@ -7,6 +7,7 @@ steam_gml_update();
 //}
 
 while (steam_net_packet_receive()) {
+	var recv_buffer = buffer_create(16, buffer_grow, 1);
 	steam_net_packet_get_data(recv_buffer);
 	buffer_seek(recv_buffer, buffer_seek_start, 0);
 	switch (global.network_type) {

@@ -43,21 +43,21 @@ handle_packet = function(buffer) {
 						global.steam_id_u16_to_u64,
 						buffer_read(buffer, buffer_u16)
 				);
-				if (steam_id != global.my_steam_id) {
-					var char = ds_map_find_value(global.characters, steam_id);
-					if (char != undefined) {
-						// show_debug_message(string(char.x) + ", " + string(char.y));
-						var update = char_update_from_buffer(buffer, steam_id);
-						ds_map_set(global.player_inputs, steam_id, update.input);
+				var char = ds_map_find_value(global.characters, steam_id);
+				if (char != undefined) {
+					var update = char_update_from_buffer(buffer, steam_id);
+					ds_map_set(global.player_inputs, steam_id, update.input);
 			
-						var char = ds_map_find_value(global.characters, steam_id);
-						char.arm_direction = update.arm_direction;
-						char.x = update.x;
-						char.y = update.y;
-					} else {
-						// buffer_seek(buffer, buffer_seek_relative, 12);
-						show_debug_message("Undefined character with steam ID: " + string(steam_id));
-					}
+					var char = ds_map_find_value(global.characters, steam_id);
+					char.arm_direction = update.arm_direction;
+					char.x = update.x;
+					char.y = update.y;
+				} else {
+					// buffer_seek(buffer, buffer_seek_relative, 12);
+					show_debug_message("Undefined character with steam ID: " + string(steam_id));
+				}
+				if (steam_id != global.my_steam_id) {
+					
 				}
 			}
 			return true;
