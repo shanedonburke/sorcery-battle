@@ -26,17 +26,19 @@ spawn_orb = function() {
 	);
 }
 
-release_orb = function() {
+release_orb = function(orb_id) {
 	if (is_undefined(orb)) {
 		spawn_orb();
 	}
 	orb.direction = arm_direction;
 	orb.speed = 2;
 	orb.stop_animation();
-	global.transients[? steam_id][? transient_types.ORB][? next_orb_id] = orb;
+	global.transients[? steam_id][? transient_types.ORB][? orb_id] = orb;
+	var old_orb = orb;
 	orb = undefined;
 	charge_frames = 0;
-	next_orb_id = (next_orb_id + 1) % 256;
+	next_orb_id = (orb_id + 1) % 256;
+	return old_orb;
 }
 
 spawn_mirror = function() {
@@ -136,7 +138,7 @@ update = function() {
 		}
 		charge_frames = 1;
 	} else if (charge_frames > 0 && global.network_type == "SERVER") {
-		release_orb();
+		release_orb(next_orb_id);
 	}
 	
 	if (is_undefined(mirror) && mmb_pressed) {

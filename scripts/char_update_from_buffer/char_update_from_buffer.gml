@@ -7,7 +7,6 @@ function char_update_from_buffer(buffer, steam_id) {
 	var _y = buffer_read(buffer, buffer_f32);
 	var t_count = buffer_read(buffer, buffer_u8);
 	if (t_count > 0) {
-		show_debug_message("t_count = " + string(t_count));
 		var char = global.characters[? steam_id];
 		var counted = 0;
 		while (counted < t_count) {
@@ -15,21 +14,20 @@ function char_update_from_buffer(buffer, steam_id) {
 			switch (t_type) {
 				case transient_types.ORB:
 					var num_orbs = buffer_read(buffer, buffer_u8);
-					show_debug_message(num_orbs);
 					for (var i = 0; i < num_orbs; i++) {
 						var orb_id = buffer_read(buffer, buffer_u8);
 						var img_idx = buffer_read(buffer, buffer_u8);
 						var o_x = buffer_read(buffer, buffer_f32);
 						var o_y = buffer_read(buffer, buffer_f32);
-						var orb = global.transients[? steam_id][? orb_id];
+						var orb = global.transients[? steam_id][? transient_types.ORB][? orb_id];
 						if (is_undefined(orb)) {
-							char.release_orb();
-							global.transients[? steam_id][? orb_id] = char.orb;
+							orb = char.release_orb(orb_id);
 						}
-						char.orb.image_index = img_idx;
-						char.orb.x = o_x;
-						char.orb.y = o_y;
+						orb.image_index = img_idx;
+						orb.x = o_x;
+						orb.y = o_y;
 					}
+					counted += num_orbs;
 					break;
 				case transient_types.MIRROR:
 					var m_angle = buffer_read(buffer, buffer_u16);
@@ -41,6 +39,7 @@ function char_update_from_buffer(buffer, steam_id) {
 					char.mirror.image_angle = m_angle;
 					char.mirror.x = m_x;
 					char.mirror.y = m_y;
+					counted += 1;
 					break;
 			}	
 		}
