@@ -48,7 +48,7 @@ handle_packet = function(buffer) {
 			return true;
 		case message_types.CHAR_UPDATE:
 			var steam_id = steam_net_packet_get_sender_id();
-			var update = char_update_from_buffer(buffer);
+			var update = char_update_from_buffer(buffer, steam_id);
 			ds_map_set(global.player_inputs, steam_id, update.input);
 			
 			var char = ds_map_find_value(global.characters, steam_id);
@@ -69,14 +69,14 @@ update = function() {
 		var num_players = steam_lobby_get_member_count();
 		if (num_players > 0) {
 			buffer_seek(send_buffer, buffer_seek_start, 0);
-			buffer_write(send_buffer, buffer_u8, 3);
+			buffer_write(send_buffer, buffer_u8, message_types.CHAR_UPDATE);
 			buffer_write(send_buffer, buffer_u32, current_time);
 			buffer_write(send_buffer, buffer_u8, num_players);
 			for (var i = 0; i < num_players; i++) {
 				steam_id = steam_lobby_get_member_id(i);
 				if (ds_map_exists(global.character_updates, steam_id)) {
 					buffer_write(send_buffer, buffer_u16, steam_id & 0xffff);
-					ds_map_find_value(global.character_updates, steam_id).write_to_buffer(send_buffer);
+					ds_map_find_value(global.character_updates, steam_id).write_to_buffer(steam_id, send_buffer);
 				}
 			}
 			for (var i = 0; i < num_players; i++) {

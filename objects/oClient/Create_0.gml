@@ -24,7 +24,7 @@ handle_packet = function(buffer) {
 		case 1:
 			//start_game_client();
 			return true;
-		case message_types.START_GAME:
+		case message_types.GAME_INIT:
 			global.character_init_buffer = buffer;
 			start_game_client();
 			return true;
@@ -47,7 +47,7 @@ handle_packet = function(buffer) {
 					var char = ds_map_find_value(global.characters, steam_id);
 					if (char != undefined) {
 						// show_debug_message(string(char.x) + ", " + string(char.y));
-						var update = char_update_from_buffer(buffer);
+						var update = char_update_from_buffer(buffer, steam_id);
 						ds_map_set(global.player_inputs, steam_id, update.input);
 			
 						var char = ds_map_find_value(global.characters, steam_id);

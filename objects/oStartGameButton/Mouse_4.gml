@@ -12,14 +12,13 @@ var num_members = steam_lobby_get_member_count();
 //}
 
 var send_buffer = buffer_create(2 + num_members * 16, buffer_fixed, 1);
-buffer_write(send_buffer, buffer_u8, 2);
+buffer_write(send_buffer, buffer_u8, message_types.GAME_INIT);
 buffer_write(send_buffer, buffer_u8, num_members);
 for (var i = 0; i < num_members; ++i) {
 	buffer_write(send_buffer, buffer_u64, steam_lobby_get_member_id(i));
 	buffer_write(send_buffer, buffer_f32, 200 + 10 * i);
 	buffer_write(send_buffer, buffer_f32, 170);
 }
-//buffer_write(send_buffer, buffer_u8, 2);
 for (var i = 0; i < num_members; ++i) {
 	var steam_id = steam_lobby_get_member_id(i);
 	if (steam_id != steam_get_user_steam_id()) {

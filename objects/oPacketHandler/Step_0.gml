@@ -6,13 +6,6 @@ steam_gml_update();
 //	ds_map_clear(global.player_inputs);
 //}
 
-if (global.characters_initialized) {
-	for (var i = 0; i < array_length(global.character_arr); i++) {
-		global.character_arr[i].update();	
-	}		
-}
-
-
 while (steam_net_packet_receive()) {
 	steam_net_packet_get_data(recv_buffer);
 	buffer_seek(recv_buffer, buffer_seek_start, 0);
@@ -23,6 +16,12 @@ while (steam_net_packet_receive()) {
 		case "CLIENT":
 			global.client.handle_packet(recv_buffer);
 			break;
+	}
+}
+
+if (global.characters_initialized) {
+	for (var i = 0; i < array_length(global.character_arr); i++) {
+		global.character_arr[i].update();
 	}
 }
 
