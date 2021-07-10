@@ -34,7 +34,7 @@ function char_update_from_buffer(buffer, steam_id) {
 					var m_x = buffer_read(buffer, buffer_f32);
 					var m_y = buffer_read(buffer, buffer_f32);
 					if (is_undefined(global.transients[? steam_id][? transient_types.MIRROR])) {
-						char.spawn_orb();
+						char.spawn_mirror();
 					}
 					char.mirror.image_angle = m_angle;
 					char.mirror.x = m_x;
