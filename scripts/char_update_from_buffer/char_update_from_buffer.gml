@@ -40,6 +40,7 @@ function char_update_from_buffer(buffer, steam_id) {
 						char.mirror.image_angle = m_angle;
 						char.mirror.x = m_x;
 						char.mirror.y = m_y;	
+						show_debug_message("Mirror moving");
 					}
 					counted += 1;
 					break;
