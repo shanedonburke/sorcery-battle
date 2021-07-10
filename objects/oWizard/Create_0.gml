@@ -30,8 +30,10 @@ release_orb = function(orb_id) {
 	if (is_undefined(orb)) {
 		spawn_orb();
 	}
-	orb.direction = arm_direction;
-	orb.speed = 2;
+	if (steam_id == global.my_steam_id) {
+		orb.direction = arm_direction;
+		orb.speed = 2;	
+	}
 	orb.stop_animation();
 	global.transients[? steam_id][? transient_types.ORB][? orb_id] = orb;
 	var old_orb = orb;

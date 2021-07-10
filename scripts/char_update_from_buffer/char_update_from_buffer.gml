@@ -6,6 +6,7 @@ function char_update_from_buffer(buffer, steam_id) {
 	var _x = buffer_read(buffer, buffer_f32);
 	var _y = buffer_read(buffer, buffer_f32);
 	var t_count = buffer_read(buffer, buffer_u8);
+	show_debug_message(string(t_count));
 	if (t_count > 0) {
 		var char = global.characters[? steam_id];
 		var counted = 0;
@@ -40,7 +41,6 @@ function char_update_from_buffer(buffer, steam_id) {
 						char.mirror.image_angle = m_angle;
 						char.mirror.x = m_x;
 						char.mirror.y = m_y;	
-						show_debug_message("Mirror moving");
 					}
 					counted += 1;
 					break;
