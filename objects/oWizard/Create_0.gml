@@ -68,11 +68,12 @@ update = function() {
 		mmb_pressed = mouse_check_button(mb_middle);
 	} else if (ds_map_exists(global.player_inputs, steam_id)) {
 		//show_debug_message("Have input");
-		var input = ds_map_find_value(global.player_inputs, steam_id);
+		var input = global.player_inputs[? steam_id];
 		key_left = input & 0x1;
 		key_right = (input >> 0x1) & 0x1;
-		key_jump = (input >> 0x2) & 1;
+		key_jump = (input >> 0x2) & 0x1;
 		lmb_pressed = (input >> 0x3) & 0x1;
+		mmb_pressed = (input >> 0x4) & 0x1;
 	}
 	
 	var old_x = x;
@@ -164,6 +165,7 @@ update = function() {
 	input |= key_right << 0x1;
 	input |= key_jump << 0x2;
 	input |= lmb_pressed << 0x3;
+	input |= mmb_pressed << 0x4;
 
 	if (is_me && global.network_type == "CLIENT") {
 		buffer_seek(send_buffer, buffer_seek_start, 0);

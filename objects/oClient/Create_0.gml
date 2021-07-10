@@ -52,7 +52,7 @@ handle_packet = function(buffer) {
 						var char = ds_map_find_value(global.characters, steam_id);
 						char.arm_direction = update.arm_direction;
 						char.x = update.x;
-						char.y = update.y;	
+						char.y = update.y;
 					}
 				} else {
 					// buffer_seek(buffer, buffer_seek_relative, 12);
