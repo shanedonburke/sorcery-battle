@@ -24,9 +24,11 @@ function char_update_from_buffer(buffer, steam_id) {
 						if (is_undefined(orb)) {
 							orb = char.release_orb(orb_id);
 						}
-						orb.image_index = img_idx;
-						orb.x = o_x;
-						orb.y = o_y;
+						if (global.network_type == "CLIENT") {
+							orb.image_index = img_idx;
+							orb.x = o_x;
+							orb.y = o_y;
+						}
 					}
 					counted += num_orbs;
 					break;
