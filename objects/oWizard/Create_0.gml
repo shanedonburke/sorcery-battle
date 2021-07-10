@@ -46,8 +46,8 @@ release_orb = function(orb_id) {
 
 spawn_mirror = function() {
 	mirror = instance_create_depth(
-		arm_x + lengthdir_x(sprite_get_width(sWizard_Arm) + 5, arm_direction),
-		arm_y + lengthdir_y(sprite_get_width(sWizard_Arm) + 5, arm_direction),
+		arm_x + lengthdir_x(sprite_get_width(sWizard_Arm) + 25, arm_direction),
+		arm_y + lengthdir_y(sprite_get_width(sWizard_Arm) + 25, arm_direction),
 		-1,
 		oMirror
 	);	
@@ -84,8 +84,8 @@ update = function() {
 	
 	var _move = key_right - key_left;
 
-	hsp = 2 * _move;
-	vsp = vsp + 0.5;
+	hsp = 10 * _move;
+	vsp = vsp + 2.5;
 	
 	if (sprite_index == sWizard && grounded && _move != 0) {
 		sprite_index = sWizard_Walking;	
@@ -94,7 +94,7 @@ update = function() {
 	}
 	
 	if (grounded && key_jump) {
-		vsp = -7.5;	
+		vsp = -38;	
 	}
 	
 	repeat(abs(vsp)) {
@@ -145,15 +145,15 @@ update = function() {
 
 	image_xscale = (arm_direction > 270 || arm_direction <= 90) ? 1 : -1;
 	
-	arm_x = x + (3 * image_xscale);
-	arm_y = y - 14;
+	arm_x = x + (15 * image_xscale);
+	arm_y = y - 75;
 	
 	if (sprite_index == sWizard_Walking) {
 		var idx_floor = floor(image_index);
 		if (idx_floor == 1 || idx_floor == 3) {
-			arm_y += 1;
+			arm_y += 5;
 		} else if (idx_floor == 2) {
-			arm_y += 2;	
+			arm_y += 10;	
 		}
 	}
 	
@@ -180,8 +180,8 @@ update = function() {
 		var diff_x = mouse_x - mirror.x;
 		var diff_y = mouse_y - mirror.y;
 		var mag = sqrt(sqr(diff_x) + sqr(diff_y));
-		diff_x = diff_x / mag * 0.2;
-		diff_y = diff_y / mag * 0.2;
+		diff_x = diff_x / mag * 1;
+		diff_y = diff_y / mag * 1;
 		mirror.x += diff_x;
 		mirror.y += diff_y;
 		var target_angle = point_direction(mirror.x, mirror.y, mouse_x, mouse_y);
