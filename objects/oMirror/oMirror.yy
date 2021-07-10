@@ -7,7 +7,10 @@
   "visible": true,
   "spriteMaskId": null,
   "persistent": false,
-  "parentObjectId": null,
+  "parentObjectId": {
+    "name": "oBlocking",
+    "path": "objects/oBlocking/oBlocking.yy",
+  },
   "physicsObject": false,
   "physicsSensor": false,
   "physicsShape": 1,
