@@ -23,7 +23,6 @@ function character_update(_input, _arm_direction, _x, _y) constructor {
 			for (var i = 0; i < num_orbs; i++) {
 				var o = orbs[? orb_id_arr[i]];
 				buffer_write(buffer, buffer_u8, orb_id_arr[i]);
-				show_debug_message(string(o.image_index));
 				buffer_write(buffer, buffer_u8, o.image_index);
 				buffer_write(buffer, buffer_f32, o.x);
 				buffer_write(buffer, buffer_f32, o.y);
