@@ -48,10 +48,12 @@ handle_packet = function(buffer) {
 					var update = char_update_from_buffer(buffer, steam_id);
 					ds_map_set(global.player_inputs, steam_id, update.input);
 			
-					var char = ds_map_find_value(global.characters, steam_id);
-					char.arm_direction = update.arm_direction;
-					char.x = update.x;
-					char.y = update.y;
+					if (steam_id != global.my_steam_id) {
+						var char = ds_map_find_value(global.characters, steam_id);
+						char.arm_direction = update.arm_direction;
+						char.x = update.x;
+						char.y = update.y;	
+					}
 				} else {
 					// buffer_seek(buffer, buffer_seek_relative, 12);
 					show_debug_message("Undefined character with steam ID: " + string(steam_id));
