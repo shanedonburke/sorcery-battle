@@ -13,6 +13,7 @@ switch (async_load[? "event_type"]) {
 		buffer_write(send_buffer, buffer_u8, 0);
 		buffer_write(send_buffer, buffer_u64, steam_get_user_steam_id());
 		steam_net_packet_send(steam_lobby_get_owner_id(), send_buffer, 9, steam_net_packet_type_reliable);
+		buffer_delete(send_buffer);
 		get_lobby_avatars();
 		room_goto(rLobby);
 		break;

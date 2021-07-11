@@ -14,8 +14,12 @@ send_buffer = buffer_create(16, buffer_grow, 1);
 steam_id = -1;
 charge_frames = 0;
 orb = undefined;
-mirror = undefined;
 next_orb_id = 0;
+mirror = undefined;
+mirror_released = true;
+mirror_counter = 0;
+MIRROR_RELEASED_LIFETIME = 2000;
+
 grounded = false;
 
 spawn_orb = function() {
@@ -32,7 +36,7 @@ release_orb = function(orb_id) {
 		spawn_orb();
 	}
 	orb.direction = arm_direction;
-	orb.speed = 2;
+	orb.speed = 10;
 	orb.stop_animation();
 	global.transients[? steam_id][? transient_types.ORB][? orb_id] = orb;
 	var old_orb = orb;
@@ -43,12 +47,49 @@ release_orb = function(orb_id) {
 }
 
 spawn_mirror = function() {
+	mirror_released = false;
 	mirror = instance_create_depth(
 		arm_x + lengthdir_x(sprite_get_width(sWizard_Arm) + 25, arm_direction),
 		arm_y + lengthdir_y(sprite_get_width(sWizard_Arm) + 25, arm_direction),
 		-1,
 		oMirror
-	);	
+	);
+	mirror.image_angle = arm_direction;
+}
+
+release_mirror = function() {
+	mirror_counter = 0;
+	mirror_released = true;
+	mirror.direction = mirror.image_angle;
+	mirror.speed = 1;
+}
+
+push_player_mirror = function(diff_x, diff_y, diff_angle) {
+	var old_x = x;
+	var old_y = y;
+	while (place_meeting(x, y, mirror)) {
+		var pd = point_direction(mirror.x, mirror.y, x, y);
+		var push_x = lengthdir_x(1, pd);
+		var push_y = lengthdir_y(1, pd);
+		var moved = false;
+		if (!place_meeting(x + push_x, y, oStatic)) {
+			show_debug_message(string(push_x));
+			x += push_x;
+			moved = true;
+		}
+		if (!place_meeting(x, y + push_y, oStatic)) {
+			y += push_y;
+			moved = true;
+		}
+		if (!moved) {
+			mirror.x -= diff_x;
+			mirror.y -= diff_y;
+			mirror.image_angle -= diff_angle;
+			x = old_x;
+			y = old_y;
+			break;
+		}
+	}	
 }
 
 update = function() {
@@ -80,7 +121,7 @@ update = function() {
 	var old_x = x;
 	var old_y = y;
 	
-	var _move = key_right - key_left;
+	var _move = mirror_released ? (key_right - key_left) : 0;
 
 	hsp = 10 * _move;
 	vsp = vsp + 2.5;
@@ -91,7 +132,9 @@ update = function() {
 		sprite_index = sWizard;	
 	}
 	
-	if (grounded && key_jump) {
+	grounded = place_meeting(x, y + 2, oBlocking);
+	
+	if (grounded && key_jump && mirror_released) {
 		vsp = -38;	
 	}
 	
@@ -173,8 +216,7 @@ update = function() {
 	
 	if (is_undefined(mirror) && mmb_pressed) {
 		spawn_mirror();
-		mirror.image_angle = arm_direction;
-	} if (!is_undefined(mirror) && mmb_pressed && is_me) {
+	} else if (!is_undefined(mirror) && mmb_pressed && is_me && !mirror_released) {
 		var diff_x = mouse_x - mirror.x;
 		var diff_y = mouse_y - mirror.y;
 		var mag = sqrt(sqr(diff_x) + sqr(diff_y));
@@ -186,38 +228,27 @@ update = function() {
 		var angle_diff = angle_difference(mirror.image_angle, target_angle);
 		var angle_change = -sign(angle_diff) * min(abs(angle_diff), 3);
 		mirror.image_angle += angle_change; 
-		var old_x = x;
-		var old_y = y;
-		while (place_meeting(x, y, mirror)) {
-			var pd = point_direction(mirror.x, mirror.y, x, y);
-			var push_x = lengthdir_x(1, pd);
-			var push_y = lengthdir_y(1, pd);
-			var moved = false;
-			if (!place_meeting(x + push_x, y, oStatic)) {
-				show_debug_message(string(push_x));
-				x += push_x;
-				moved = true;
-			}
-			if (!place_meeting(x, y + push_y, oStatic)) {
-				y += push_y;
-				moved = true;
-			}
-			if (!moved) {
-				mirror.x -= diff_x;
-				mirror.y -= diff_y;
-				mirror.image_angle -= angle_change;
-				x = old_x;
-				y = old_y;
-				break;
-			}
-		}
+		push_player_mirror(diff_x, diff_y, angle_change);
 		mirror.image_angle -= 360 * (mirror.image_angle div 360);
 		if (mirror.image_angle < 0) {
 			mirror.image_angle += 360;
 		}
+	} else if (!is_undefined(mirror) && !mmb_pressed && is_me && !mirror_released) {
+		release_mirror();
+	} else if (!is_undefined(mirror) && is_me && mirror_released) {
+		var diff_x = lengthdir_x(mirror.speed, mirror.direction);
+		var diff_y = lengthdir_y(mirror.speed, mirror.direction);
+		with (mirror) {
+			x += diff_x;
+			y += diff_y;	
+		}
+		push_player_mirror(diff_x, diff_y, 0);
+		mirror_counter += delta_time / 1000;
+		if (mirror_counter >= MIRROR_RELEASED_LIFETIME) {
+			instance_destroy(mirror);
+			mirror = undefined;
+		}
 	}
-	
-	grounded = place_meeting(x, y + 1, oBlocking);
 	
 	var input = 0;
 	input |= key_left;
@@ -238,5 +269,5 @@ update = function() {
 		ds_map_set(global.player_inputs, global.my_steam_id, input);
 		ds_map_set(global.character_updates, steam_id, new character_update(input, arm_direction, old_x, old_y));
 	}
-	global.transients[? steam_id][? transient_types.MIRROR] = mirror;
+	global.transients[? steam_id][? transient_types.MIRROR] = mirror;	
 }

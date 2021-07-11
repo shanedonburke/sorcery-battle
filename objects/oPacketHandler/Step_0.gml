@@ -18,6 +18,7 @@ while (steam_net_packet_receive()) {
 			global.client.handle_packet(recv_buffer);
 			break;
 	}
+	buffer_delete(recv_buffer);
 }
 
 if (global.characters_initialized) {

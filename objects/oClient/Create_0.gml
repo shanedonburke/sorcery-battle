@@ -25,7 +25,9 @@ handle_packet = function(buffer) {
 			//start_game_client();
 			return true;
 		case message_types.GAME_INIT:
-			global.character_init_buffer = buffer;
+			var buf_size = buffer_get_size(buffer);
+			global.character_init_buffer = buffer_create(buf_size, buffer_fixed, 1);
+			buffer_copy(buffer, 0, buf_size, global.character_init_buffer, 0);
 			start_game_client();
 			return true;
 		case message_types.CHAR_UPDATE:

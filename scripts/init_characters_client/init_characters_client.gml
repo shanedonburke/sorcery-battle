@@ -16,4 +16,10 @@ function init_characters_client() {
 	}
 	global.characters_initialized = true;
 	global.character_arr = ds_map_values_to_array(global.characters);
+	if (global.network_type == "CLIENT") {
+		var send_buf = buffer_create(1, buffer_fixed, 1);
+		buffer_write(send_buf, buffer_u8, message_types.LOADED);
+		steam_net_packet_send(steam_lobby_get_owner_id(), send_buf, 1, steam_net_packet_type_reliable);
+		buffer_delete(send_buf);
+	}
 }
