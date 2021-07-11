@@ -22,9 +22,10 @@ handle_packet = function(buffer) {
 	var msg_type = buffer_read(buffer, buffer_u8);
 	switch (msg_type) {
 		case message_types.GAME_INIT:
-			var buf_size = buffer_get_size(buffer);
-			global.character_init_buffer = buffer_create(buf_size, buffer_fixed, 1);
-			buffer_copy(buffer, 0, buf_size, global.character_init_buffer, 0);
+			//var buf_size = buffer_get_size(buffer);
+			//global.character_init_buffer = buffer_create(buf_size, buffer_fixed, 1);
+			//buffer_copy(buffer, 0, buf_size, global.character_init_buffer, 0);
+			global.character_init_buffer = buffer;
 			goto_game_room();
 			return true;
 		case message_types.LOADED:
@@ -59,9 +60,6 @@ handle_packet = function(buffer) {
 				} else {
 					// buffer_seek(buffer, buffer_seek_relative, 12);
 					show_debug_message("Undefined character with steam ID: " + string(steam_id));
-				}
-				if (steam_id != global.my_steam_id) {
-					
 				}
 			}
 			return true;

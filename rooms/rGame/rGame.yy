@@ -30,6 +30,7 @@
   "creationCodeFile": "${project_dir}/rooms/rGame/RoomCreationCode.gml",
   "inheritCode": false,
   "instanceCreationOrder": [
+    {"name":"inst_6DFA756F","path":"rooms/rGame/rGame.yy",},
     {"name":"inst_2CDDCD3","path":"rooms/rGame/rGame.yy",},
     {"name":"inst_5A3AC061","path":"rooms/rGame/rGame.yy",},
     {"name":"inst_F5C94E","path":"rooms/rGame/rGame.yy",},
@@ -38,7 +39,6 @@
     {"name":"inst_43C0BDA1","path":"rooms/rGame/rGame.yy",},
     {"name":"inst_49004C58","path":"rooms/rGame/rGame.yy",},
     {"name":"inst_13BE742D","path":"rooms/rGame/rGame.yy",},
-    {"name":"inst_6DFA756F","path":"rooms/rGame/rGame.yy",},
   ],
   "inheritCreationOrder": false,
   "sequenceId": null,
