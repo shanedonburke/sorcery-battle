@@ -27,10 +27,10 @@ if (global.characters_initialized) {
 	}
 }
 
-if (room == rGame && (!variable_global_exists("characters_initialized") || !global.characters_initialized)) {
-	global.characters_initialized = false;
-	init_characters_client();
-}
+//if (room == rGame && (!variable_global_exists("characters_initialized") || !global.characters_initialized)) {
+//	global.characters_initialized = false;
+//	init_characters_client();
+//}
 
 if (global.network_type == "SERVER") {
 	global.server.update();	

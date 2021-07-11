@@ -46,6 +46,12 @@ handle_packet = function(buffer) {
 			// var steam_id = buffer_read(recv_buffer, buffer_u64);
 			get_lobby_avatars();
 			return true;
+		case message_types.LOADED:
+			global.num_loaded++;
+			if (global.num_loaded == steam_lobby_get_member_count()) {
+				start_game_server();	
+			}
+			return true;
 		case message_types.CHAR_UPDATE:
 			var steam_id = steam_net_packet_get_sender_id();
 			var update = char_update_from_buffer(buffer, steam_id);

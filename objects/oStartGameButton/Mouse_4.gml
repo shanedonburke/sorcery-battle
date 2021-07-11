@@ -28,4 +28,4 @@ for (var i = 0; i < num_members; ++i) {
 buffer_seek(send_buffer, buffer_seek_start, 1);
 global.character_init_buffer = send_buffer;
 
-start_game_client();
+goto_game_room();

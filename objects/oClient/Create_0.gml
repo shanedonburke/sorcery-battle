@@ -21,13 +21,13 @@ last_update_ms = 0;
 handle_packet = function(buffer) {
 	var msg_type = buffer_read(buffer, buffer_u8);
 	switch (msg_type) {
-		case 1:
-			//start_game_client();
-			return true;
 		case message_types.GAME_INIT:
 			var buf_size = buffer_get_size(buffer);
 			global.character_init_buffer = buffer_create(buf_size, buffer_fixed, 1);
 			buffer_copy(buffer, 0, buf_size, global.character_init_buffer, 0);
+			goto_game_room();
+			return true;
+		case message_types.LOADED:
 			start_game_client();
 			return true;
 		case message_types.CHAR_UPDATE:

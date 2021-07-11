@@ -21,5 +21,10 @@ function init_characters_client() {
 		buffer_write(send_buf, buffer_u8, message_types.LOADED);
 		steam_net_packet_send(steam_lobby_get_owner_id(), send_buf, 1, steam_net_packet_type_reliable);
 		buffer_delete(send_buf);
+	} else {
+		global.num_loaded++;
+		if (global.num_loaded == steam_lobby_get_member_count()) {
+			start_game_server();
+		}
 	}
 }
