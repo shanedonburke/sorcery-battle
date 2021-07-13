@@ -122,6 +122,7 @@ update = function() {
 	var old_y = y;
 	
 	var _move = mirror_released ? (key_right - key_left) : 0;
+	_move = global.game_started ? _move : 0;
 
 	hsp = 10 * _move;
 	vsp = vsp + 2.5;
@@ -134,7 +135,7 @@ update = function() {
 	
 	grounded = place_meeting(x, y + 2, oBlocking);
 	
-	if (grounded && key_jump && mirror_released) {
+	if (grounded && key_jump && mirror_released && global.game_started) {
 		vsp = -38;	
 	}
 	
@@ -202,51 +203,53 @@ update = function() {
 		arm_direction =  point_direction(arm_x, arm_y, mouse_x, mouse_y);	
 	}
 
-	if (lmb_pressed) {
-		if (charge_frames == 0) {
-			spawn_orb();
-		} else {
-			orb.x = arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction);
-			orb.y = arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction);
+	if (global.game_started) {
+		if (lmb_pressed) {
+			if (charge_frames == 0) {
+				spawn_orb();
+			} else {
+				orb.x = arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction);
+				orb.y = arm_y + lengthdir_y(sprite_get_width(sWizard_Arm), arm_direction);
+			}
+			charge_frames = 1;
+		} else if (charge_frames > 0 && global.network_type == "SERVER") {
+			release_orb(next_orb_id);
 		}
-		charge_frames = 1;
-	} else if (charge_frames > 0 && global.network_type == "SERVER") {
-		release_orb(next_orb_id);
-	}
 	
-	if (is_undefined(mirror) && mmb_pressed) {
-		spawn_mirror();
-	} else if (!is_undefined(mirror) && mmb_pressed && is_me && !mirror_released) {
-		var diff_x = mouse_x - mirror.x;
-		var diff_y = mouse_y - mirror.y;
-		var mag = sqrt(sqr(diff_x) + sqr(diff_y));
-		diff_x = diff_x / mag * 1;
-		diff_y = diff_y / mag * 1;
-		mirror.x += diff_x;
-		mirror.y += diff_y;
-		var target_angle = point_direction(mirror.x, mirror.y, mouse_x, mouse_y);
-		var angle_diff = angle_difference(mirror.image_angle, target_angle);
-		var angle_change = -sign(angle_diff) * min(abs(angle_diff), 3);
-		mirror.image_angle += angle_change; 
-		push_player_mirror(diff_x, diff_y, angle_change);
-		mirror.image_angle -= 360 * (mirror.image_angle div 360);
-		if (mirror.image_angle < 0) {
-			mirror.image_angle += 360;
-		}
-	} else if (!is_undefined(mirror) && !mmb_pressed && is_me && !mirror_released) {
-		release_mirror();
-	} else if (!is_undefined(mirror) && is_me && mirror_released) {
-		var diff_x = lengthdir_x(mirror.speed, mirror.direction);
-		var diff_y = lengthdir_y(mirror.speed, mirror.direction);
-		with (mirror) {
-			x += diff_x;
-			y += diff_y;	
-		}
-		push_player_mirror(diff_x, diff_y, 0);
-		mirror_counter += delta_time / 1000;
-		if (mirror_counter >= MIRROR_RELEASED_LIFETIME) {
-			instance_destroy(mirror);
-			mirror = undefined;
+		if (is_undefined(mirror) && mmb_pressed) {
+			spawn_mirror();
+		} else if (!is_undefined(mirror) && mmb_pressed && is_me && !mirror_released) {
+			var diff_x = mouse_x - mirror.x;
+			var diff_y = mouse_y - mirror.y;
+			var mag = sqrt(sqr(diff_x) + sqr(diff_y));
+			diff_x = diff_x / mag * 1;
+			diff_y = diff_y / mag * 1;
+			mirror.x += diff_x;
+			mirror.y += diff_y;
+			var target_angle = point_direction(mirror.x, mirror.y, mouse_x, mouse_y);
+			var angle_diff = angle_difference(mirror.image_angle, target_angle);
+			var angle_change = -sign(angle_diff) * min(abs(angle_diff), 3);
+			mirror.image_angle += angle_change; 
+			push_player_mirror(diff_x, diff_y, angle_change);
+			mirror.image_angle -= 360 * (mirror.image_angle div 360);
+			if (mirror.image_angle < 0) {
+				mirror.image_angle += 360;
+			}
+		} else if (!is_undefined(mirror) && !mmb_pressed && is_me && !mirror_released) {
+			release_mirror();
+		} else if (!is_undefined(mirror) && is_me && mirror_released) {
+			var diff_x = lengthdir_x(mirror.speed, mirror.direction);
+			var diff_y = lengthdir_y(mirror.speed, mirror.direction);
+			with (mirror) {
+				x += diff_x;
+				y += diff_y;	
+			}
+			push_player_mirror(diff_x, diff_y, 0);
+			mirror_counter += delta_time / 1000;
+			if (mirror_counter >= MIRROR_RELEASED_LIFETIME) {
+				instance_destroy(mirror);
+				mirror = undefined;
+			}
 		}
 	}
 	
