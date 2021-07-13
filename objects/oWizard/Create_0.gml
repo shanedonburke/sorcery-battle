@@ -22,6 +22,13 @@ MIRROR_RELEASED_LIFETIME = 2000;
 
 grounded = false;
 
+damage = function(dmg) {
+	hp -= dmg;
+	if (hp <= 0) {
+		// dead	
+	}
+}
+
 spawn_orb = function() {
 	orb = instance_create_depth(
 		arm_x + lengthdir_x(sprite_get_width(sWizard_Arm), arm_direction),
@@ -29,6 +36,7 @@ spawn_orb = function() {
 		-1,
 		oWizardOrb
 	);
+	orb.steam_id = steam_id;
 }
 
 release_orb = function(orb_id) {
@@ -36,7 +44,8 @@ release_orb = function(orb_id) {
 		spawn_orb();
 	}
 	orb.direction = arm_direction;
-	orb.speed = 10;
+	orb.speed = 8 - ((orb.image_index / (orb.image_number - 1)) / 2 * 8)
+	orb.orb_id = orb_id;
 	orb.stop_animation();
 	global.transients[? steam_id][? transient_types.ORB][? orb_id] = orb;
 	var old_orb = orb;
